@@ -1,0 +1,17 @@
+{
+  "mail": {
+    "user": "someuser@gmail.com",
+    "password": "mail-password",
+    "to": "receiver@gmail.com",
+    "from": "Digestor <service@digestor.mailgun.org>",
+    "host": "smtp.mailgun.org"
+  },
+  "twitter": {
+    "user_id": "1111111",
+    "screen_name": "twitter-user",
+    "consumerKey": "",
+    "consumerSecret": "",
+    "accessToken": "",
+    "accessSecret": ""
+  }
+}
