@@ -18,7 +18,10 @@ import (
 
 const (
 	mailSubject = "Today's Digestor "
+	tweetsCount = "100"
 )
+
+var twitterUserWhitelist = []string{"dhh", "brainpicker", "Explore", "CatChen", "Livid"}
 
 // Config is for the whole config
 type Config struct {
@@ -54,7 +57,7 @@ func main() {
 	fmt.Println("Fetching tweets.....")
 	response, err := client.Get(
 		"https://api.twitter.com/1.1/statuses/home_timeline.json",
-		map[string]string{"count": "30"},
+		map[string]string{"count": tweetsCount},
 		accessToken)
 
 	if err != nil {
@@ -146,15 +149,10 @@ func tweetsMarkup(gTweets map[string][]Tweet) []byte {
 	return doc.Bytes()
 }
 
-func twitterUserWhitelist() []string {
-	return []string{"dhh", "brainpicker", "Explore", "CatChen"}
-}
-
 func groupByUser(tweets []Tweet) map[string][]Tweet {
 	var group = make(map[string][]Tweet)
-	users := twitterUserWhitelist()
 	for _, tweet := range tweets {
-		if stringInSlice(tweet.User.ScreenName, users) {
+		if stringInSlice(tweet.User.ScreenName, twitterUserWhitelist) {
 			group[tweet.User.Name] = append(group[tweet.User.Name], tweet)
 		}
 	}
