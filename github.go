@@ -4,7 +4,12 @@ import (
 	"bytes"
 	"github.com/moovweb/gokogiri"
 	"github.com/moovweb/gokogiri/css"
+	"github.com/moovweb/gokogiri/xml"
 	"html/template"
+)
+
+const (
+	githubHost = "http://github.com"
 )
 
 func githubMarkup() string {
@@ -22,6 +27,7 @@ func githubMarkup() string {
 		desc, _ := l.Search(css.Convert(".repo-leaderboard-description", css.LOCAL))
 
 		if len(repos) > 0 {
+			absoluteURL(repos[0])
 			result += repos[0].String()
 		}
 		if len(desc) > 0 {
@@ -45,4 +51,10 @@ func githubMarkup() string {
 	})
 
 	return string(results.Bytes())
+}
+
+// make node's href absolute
+func absoluteURL(node xml.Node) {
+	url := node.Attribute("href").Value()
+	node.SetAttr("href", githubHost+url)
 }
