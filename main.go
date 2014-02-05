@@ -21,6 +21,7 @@ const (
 type Config struct {
 	Mail    map[string]string `json:"mail"`
 	Twitter TwitterConfig     `json:"twitter"`
+	RSS     RSSConfig         `json:"rss"`
 }
 
 var config *Config
@@ -28,27 +29,9 @@ var config *Config
 func main() {
 	initConfig()
 
-	client, accessToken := auth()
-
-	fmt.Println("Fetching tweets.....")
-	response, err := client.Get(
-		"https://api.twitter.com/1.1/statuses/home_timeline.json",
-		map[string]string{"count": tweetsCount},
-		accessToken)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer response.Body.Close()
-
-	bits, err := ioutil.ReadAll(response.Body)
-
-	var tweets []Tweet
-	json.Unmarshal(bits, &tweets)
-
-	fmt.Println("Sending email...")
 	// get the email contents
-	contents := emailContents(tweetsMarkup(groupByUser(tweets)))
+	contents := emailContents()
+
 	sendEmail(contents)
 	fmt.Println("Email sent.")
 }
@@ -81,15 +64,16 @@ func mailTemplateFromFile() string {
 	return string(emailTemplateString)
 }
 
-func emailContents(tweets []byte) []byte {
+func emailContents() []byte {
 	// read the templat
 	tmpl, err := template.New("tweets").Parse(mailTemplate)
 	checkErr(err, "mail template create failed")
 
 	var doc bytes.Buffer
 	tmpl.Execute(&doc, map[string]interface{}{
-		"tweetsMarkup":     template.HTML(string(tweets)),
+		"tweetsMarkup":     template.HTML(tweetsMarkup()),
 		"githubMarkup":     template.HTML(githubMarkup()),
+		"rssMarkup":        template.HTML(rssMarkup()),
 		"hackerNewsMarkup": template.HTML(hackerNewsMarkup())})
 
 	return doc.Bytes()

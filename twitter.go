@@ -2,14 +2,16 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/mrjones/oauth"
 	"html/template"
+	"io/ioutil"
 	"log"
 )
 
 const (
-	tweetsCount = "100"
+	tweetsCount = "200"
 )
 
 // TwitterConfig is for twitter
@@ -41,7 +43,26 @@ type User struct {
 	ScreenName string `json:"screen_name"`
 }
 
-func tweetsMarkup(gTweets map[string][]Tweet) []byte {
+func tweetsMarkup() string {
+	fmt.Println("Fetching tweets.....")
+
+	client, accessToken := auth()
+
+	response, err := client.Get(
+		"https://api.twitter.com/1.1/statuses/home_timeline.json",
+		map[string]string{"count": tweetsCount},
+		accessToken)
+
+	checkErr(err, "can not fetch tweets")
+	defer response.Body.Close()
+
+	bits, err := ioutil.ReadAll(response.Body)
+
+	var tweets []Tweet
+	json.Unmarshal(bits, &tweets)
+
+	gTweets := groupByUser(tweets)
+
 	tmpl, err := template.New("tweets").Parse(`
     {{range $name, $tweets := .group}}
       <div class="user-tweets">
@@ -61,7 +82,7 @@ func tweetsMarkup(gTweets map[string][]Tweet) []byte {
 		"group": gTweets,
 	})
 
-	return doc.Bytes()
+	return string(doc.Bytes())
 }
 
 func groupByUser(tweets []Tweet) map[string][]Tweet {

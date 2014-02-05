@@ -200,6 +200,8 @@ ul li, ol li {
             {{.hackerNewsMarkup}}
 						<h1>Github activities</h1>
             {{.githubMarkup}}
+						<h1>RSS Feeds</h1>
+            {{.rssMarkup}}
 
             <!--ugly table here-->
 						<!--<table>-->

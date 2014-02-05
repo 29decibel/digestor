@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/moovweb/gokogiri"
 	"github.com/moovweb/gokogiri/css"
 	"html/template"
 )
 
 func hackerNewsMarkup() string {
+	fmt.Println("Fetching hackernews.....")
 
 	body := body("https://news.ycombinator.com/")
 	doc, _ := gokogiri.ParseHtml(body)
