@@ -1,10 +1,21 @@
-digestor
-========
+## Digestor
+> Your personal digest mail service
 
-Personal digest mail service
+> Get your personal social email stream digest every day
 
+> Leave your browser
+
+------
+![tweets](https://raw2.github.com/29decibel/digestor/master/resources/tweets-digest.png)
+![hackernews](https://raw2.github.com/29decibel/digestor/master/resources/hackernews-digest.png)
+![github](https://raw2.github.com/29decibel/digestor/master/resources/github-digest.png)
+
+
+## Install
 ```
-~/.digestor.json
+# create your own config
+# make changes by your self
+cp digestor.json.example ~/.digestor.json
 ```
 
 ## crontab task
