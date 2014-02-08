@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/jordan-wright/email"
 	"html/template"
@@ -25,8 +26,12 @@ type Config struct {
 }
 
 var config *Config
+var defaultConfigPath = "/.digestor.json"
+var configFile = flag.String("c", defaultConfigPath, "config file path")
 
 func main() {
+	flag.Parse()
+
 	initConfig()
 
 	// get the email contents
@@ -37,11 +42,17 @@ func main() {
 }
 
 func initConfig() {
-	usr, _ := user.Current()
-	dir := usr.HomeDir
+	var path string
+	if *configFile == defaultConfigPath {
+		usr, _ := user.Current()
+		dir := usr.HomeDir
+		path = dir + "/.digestor.json"
+	} else {
+		path = *configFile
+	}
 
-	configFile, err := ioutil.ReadFile(dir + "/.digestor.json")
-	checkErr(err, "Can not load config file, please edit your config file: ~/.digestor.json")
+	configFile, err := ioutil.ReadFile(path)
+	checkErr(err, "Can not load config file "+path+", please edit your config file: ~/.digestor.json or provide -c your-config.json")
 	json.Unmarshal(configFile, &config)
 }
 

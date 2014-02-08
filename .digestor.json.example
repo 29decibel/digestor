@@ -1,17 +1,36 @@
 {
   "mail": {
     "user": "someuser@gmail.com",
-    "password": "mail-password",
-    "to": "receiver@gmail.com",
+    "password": "gmailpassword",
+    "to": "digest-send-to@gmail.com",
     "from": "Digestor <service@digestor.mailgun.org>",
     "host": "smtp.mailgun.org"
   },
   "twitter": {
-    "user_id": "1111111",
-    "screen_name": "twitter-user",
+    "user_id": "twitter-user-id",
+    "white_list_users": ["dhh", "Explore", "Livid", "golang", "docker", "maccaw", "garybernhardt"],
+    "screen_name": "your-twitter-name",
     "consumerKey": "",
     "consumerSecret": "",
     "accessToken": "",
     "accessSecret": ""
+  },
+  "rss": {
+    "feeds":[
+      "http://feedproxy.google.com/brainpickings/rss",
+      "http://livid.v2ex.com/atom.xml",
+      "https://tech.dropbox.com/feed/",
+      "http://feed.feedsky.com/apple4us",
+      "http://feeds.feedburner.com/37signals/beMH",
+      "http://feeds.feedburner.com/tuupola",
+      "http://nathany.com/articles.xml",
+      "http://engineering.linkedin.com/taxonomy/term/1/feed",
+      "http://techblog.netflix.com/rss.xml",
+      "http://engineering.twitter.com/feeds/posts/default",
+      "http://www.yuiblog.com/blog/feed/",
+      "http://blog.codingnow.com/atom.xml",
+      "http://feeds.feedburner.com/golangnewsletter",
+      "http://javascriptweekly.com/rss/1m8350hh"
+    ]
   }
 }
