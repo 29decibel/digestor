@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/moovweb/gokogiri"
 	"github.com/moovweb/gokogiri/css"
+	"github.com/moovweb/gokogiri/xml"
 	"html/template"
 )
 
@@ -33,11 +34,14 @@ func hackerNewsMarkup() string {
 	links, _ := doc.Search(xpath)
 
 	var newLinks []HNLink
+	var chanLinks = make(chan HNLink)
 	for _, l := range links[:len(links)-1] {
-		hnlink := HNLink{
-			LinkMarkup: template.HTML(l.String()),
-			Excerpt:    template.HTML(excerpt(l.Attribute("href").Value()))}
-		newLinks = append(newLinks, hnlink)
+		go parseLink(l, chanLinks)
+	}
+
+	// collect back links info
+	for i := 0; i < len(links)-1; i++ {
+		newLinks = append(newLinks, <-chanLinks)
 	}
 
 	tmpl, err := template.New("hackernews").Parse(`
@@ -56,6 +60,13 @@ func hackerNewsMarkup() string {
 	})
 
 	return string(results.Bytes())
+}
+
+func parseLink(node xml.Node, linksChan chan HNLink) {
+	hnlink := HNLink{
+		LinkMarkup: template.HTML(node.String()),
+		Excerpt:    template.HTML(excerpt(node.Attribute("href").Value()))}
+	linksChan <- hnlink
 }
 
 func excerpt(url string) string {
