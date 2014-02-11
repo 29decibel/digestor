@@ -187,16 +187,13 @@ ul li, ol li {
 
 			<!-- content -->
 			<div class="content">
+      <h1>{{.today}} Digest</h1>
 			<table>
 				<tr>
 					<td>
-            <!--
-							 -<p>Hi there,</p>
-               -<p>Here is your today's digestor, just for you .</p>
-               -->
-						<h1>Tweets Digest</h1>
+						<h1>Tweets</h1>
             {{.tweetsMarkup}}
-						<h1>Hackernews Digest</h1>
+						<h1>Hackernews</h1>
             {{.hackerNewsMarkup}}
 						<h1>Github activities</h1>
             {{.githubMarkup}}

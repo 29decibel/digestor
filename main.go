@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"os/user"
+	"time"
 )
 
 const (
@@ -42,6 +43,10 @@ func main() {
 	fmt.Println("Email sent.")
 }
 
+func todayString() string {
+	return time.Now().Format("Jan 2, 2006")
+}
+
 func initConfig() {
 	var path string
 	if *configFile == defaultConfigPath {
@@ -62,7 +67,7 @@ func sendEmail(contents []byte) {
 	e := email.NewEmail()
 	e.From = config.Mail["from"]
 	e.To = []string{config.Mail["to"]}
-	e.Subject = mailSubject
+	e.Subject = mailSubject + todayString()
 
 	e.HTML = contents
 	e.Send(config.Mail["host"]+":587", smtp.PlainAuth("", config.Mail["user"], config.Mail["password"], config.Mail["host"]))
@@ -83,6 +88,7 @@ func emailContents() []byte {
 
 	var doc bytes.Buffer
 	tmpl.Execute(&doc, map[string]interface{}{
+		"today":            todayString(),
 		"tweetsMarkup":     template.HTML(tweetsMarkup()),
 		"githubMarkup":     template.HTML(githubMarkup()),
 		"rssMarkup":        template.HTML(rssMarkup()),
@@ -115,15 +121,3 @@ func body(url string) []byte {
 	body, err := ioutil.ReadAll(resp.Body)
 	return body
 }
-
-/*
- *
- *func getTciwiweets() type {
- *  anaconda.SetConsumerKey("your-consumer-key")
- *  anaconda.SetConsumerSecret("your-consumer-secret")
- *  api := anaconda.NewTwitterApi("your-access-token", "your-access-token-secret")
- *
- *  api.GetUserTimeline
- *
- *}
- */
