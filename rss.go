@@ -19,8 +19,9 @@ var timeFormats = []string{
 
 // RSSItem is the simple version of rss item
 type RSSItem struct {
-	Href  string
-	Title string
+	Href    string
+	Title   string
+	Excerpt string
 }
 
 // RSSConfig is for rss config information
@@ -37,8 +38,11 @@ func rssMarkup() string {
 
 	tmpl, err := template.New("rss").Parse(`
     <ul>
-    {{range .links}}
-        <li><a href="{{.Href}}">{{.Title}}</a></li>
+      {{range .links}}
+        <li>
+          <a href="{{.Href}}">{{.Title}}</a>
+          <p>{{.Excerpt}}</p>
+        </li>
       {{end}}
     </ul>
   `)
@@ -88,7 +92,11 @@ func chanHandler(feed *rss.Feed, newchannels []*rss.Channel) {
 func itemHandler(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
 	for _, item := range newItems {
 		if isToday(item.PubDate) {
-			rssItems = append(rssItems, RSSItem{Title: item.Title, Href: item.Links[0].Href})
+			// make an article
+			article := Article{URL: item.Links[0].Href}
+			article.parse()
+
+			rssItems = append(rssItems, RSSItem{Title: item.Title, Href: item.Links[0].Href, Excerpt: article.Excerpt})
 		}
 	}
 }
