@@ -8,6 +8,21 @@ import (
 	"html/template"
 )
 
+// HNLink is a struct for a single link
+type HNLink struct {
+	LinkMarkup template.HTML
+	Excerpt    template.HTML
+}
+
+// HNConfig is for hackernews config
+type HNConfig struct {
+	ReadabilityKey string `json:"readability_key"`
+}
+
+func (link HNLink) String() string {
+	return fmt.Sprintf("%s\n%s", link.LinkMarkup, link.Excerpt)
+}
+
 func hackerNewsMarkup() string {
 	fmt.Println("Fetching hackernews.....")
 
@@ -17,15 +32,19 @@ func hackerNewsMarkup() string {
 	xpath := css.Convert("td.title a", css.GLOBAL)
 	links, _ := doc.Search(xpath)
 
-	var newLinks []interface{}
+	var newLinks []HNLink
 	for _, l := range links[:len(links)-1] {
-		newLinks = append(newLinks, template.HTML(l.String()))
+		hnlink := HNLink{
+			LinkMarkup: template.HTML(l.String()),
+			Excerpt:    template.HTML(excerpt(l.Attribute("href").Value()))}
+		newLinks = append(newLinks, hnlink)
 	}
 
 	tmpl, err := template.New("hackernews").Parse(`
     <ul>
       {{range .links}}
-        <li>{{.}}</li>
+        <li>{{.LinkMarkup}}</li>
+        <p>{{.Excerpt}}</p>
       {{end}}
     </ul>
   `)
@@ -37,4 +56,11 @@ func hackerNewsMarkup() string {
 	})
 
 	return string(results.Bytes())
+}
+
+func excerpt(url string) string {
+	article := Article{URL: url}
+	article.parse()
+
+	return article.Excerpt
 }

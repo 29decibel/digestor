@@ -7,6 +7,7 @@
     "host": "smtp.mailgun.org"
   },
   "twitter": {
+    "enabled": true
     "user_id": "twitter-user-id",
     "white_list_users": ["dhh", "Explore", "Livid", "golang", "docker", "maccaw", "garybernhardt"],
     "screen_name": "your-twitter-name",
@@ -15,7 +16,13 @@
     "accessToken": "",
     "accessSecret": ""
   },
+  "hackernews": {
+    "enabled": true,
+    "readability_key": "your readability.com parser key"
+  },
   "rss": {
+    "enabled": true
+    // we need to support blog url directlly
     "feeds":[
       "http://feedproxy.google.com/brainpickings/rss",
       "http://livid.v2ex.com/atom.xml",

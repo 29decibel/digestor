@@ -20,9 +20,10 @@ const (
 
 // Config is for the whole config
 type Config struct {
-	Mail    map[string]string `json:"mail"`
-	Twitter TwitterConfig     `json:"twitter"`
-	RSS     RSSConfig         `json:"rss"`
+	Mail       map[string]string `json:"mail"`
+	Twitter    TwitterConfig     `json:"twitter"`
+	RSS        RSSConfig         `json:"rss"`
+	Hackernews HNConfig          `json:"hackernews"`
 }
 
 var config *Config
