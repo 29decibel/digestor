@@ -32,6 +32,7 @@ var defaultConfigPath = "/.digestor.json"
 var configFile = flag.String("c", defaultConfigPath, "config file path")
 
 func main() {
+	fmt.Println("Start generating todays' digest: " + todayString())
 	flag.Parse()
 
 	initConfig()
@@ -40,7 +41,7 @@ func main() {
 	contents := emailContents()
 
 	sendEmail(contents)
-	fmt.Println("Email sent.")
+	fmt.Println("Email sent.\n")
 }
 
 func todayString() string {
