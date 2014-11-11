@@ -74,18 +74,18 @@ func sendEmail(contents []byte) {
 	e.Send(config.Mail["host"]+":587", smtp.PlainAuth("", config.Mail["user"], config.Mail["password"], config.Mail["host"]))
 }
 
-// get mail temaplte from file
-// not used for now, cause we have a embeded one
+// get mail template from file
+// not used for now, because we have a embedded one
 func mailTemplateFromFile() string {
 	emailTemplateString, err := ioutil.ReadFile("./email.html")
-	checkErr(err, "can not load email template ")
+	checkErr(err, "cannot load email template")
 	return string(emailTemplateString)
 }
 
 func emailContents() []byte {
-	// read the templat
+	// read the template
 	tmpl, err := template.New("tweets").Parse(mailTemplate)
-	checkErr(err, "mail template create failed")
+	checkErr(err, "mail-template creation failed")
 
 	var doc bytes.Buffer
 	tmpl.Execute(&doc, map[string]interface{}{
